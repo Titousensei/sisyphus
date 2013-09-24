@@ -1,56 +1,151 @@
+Here's a few examples of Sisyphus programs. The input files are in the directory
+data/, and the output files are in the directory results/.
+
 === Basic Example ===
 
-- examples.Csv2Tsv
+This is a very simple example reading a file in CSV format and writing it
+in TSV format. It uses the public domain file Export-Import_FY_2010_Applications.csv
+
+  ./run examples.Csv2Tsv
+
+The result is the file Export-Import_FY_2010_Applications.tsv.gz
 
 === Group-by + Count ===
 
-- examples.GroupByCount
+This example demonstrates how to do the equivalent of a "group-by + count".
+The input file has the column "Country" and we want to know how many rows
+there is for each country.
 
-=== Sum ===
+  ./run examples.GroupByCount
 
-- examples.AverageRate
+The result is printed on the console, in the log messages.
+
+=== Sum/Average ===
+
+This example demonstrates statistics aggregation. We want to get the average
+for the column "Loan Interest Rate".
+
+  ./run examples.AverageRate
+
+The result is printed on the console.
 
 === Filter ===
 
-- examples.FilterCountry brazil
+This is an example that filters only the row where the column "Country" matches
+the name passed as an argument (example: brazil)
+
+  ./run examples.FilterCountry <country>
+
+The result is the file FilterCountry-<country>.gz.
 
 === Modifier ===
 
-- examples.LineNumberUsage
+This example demonstrates the implementation of a Modifier: a class that
+creates or modifies the values of columns. In the example, the class LineNumber,
+which is just a counter, is used to add a column with the row number.
+
+./run examples.LineNumberUsage
+
+The result is the file NumberedLines.gz
 
 == Multiple Outputs (1) ===
 
-- examples.SplitIn2Files
+This example demonstrates one way to write rows to multiple outputs, simply by
+having two different OutputFile statements. This method is used when the rows
+should go into one or another file, depending on some condition. This method
+can also be used when the same row needs to go to multiple files.
+
+  ./run examples.SplitIn2Files
+
+The results are in the files Brokered-Y.gz and Brokered-N.gz
 
 == Multiple Outputs (2) ===
 
-- examples.SplitToMultipleFiles
+In some cases, we want to split the data into multiple files according to the
+value of one column. (If the cardinality of the column is small enough.)
+
+In this example, the column "Program" can value one of the 4 values:
+"Guarantee", "Insurance", "Loan" or "Working Capital". Note that the list of
+values doesn't need to be known beforehand: if a new value is introduced, the
+same program will still work and will create one extra file.
+
+  ./run examples.SplitToMultipleFiles
+
+The results are in the files: "SplitToMultipleFiles - Guarantee.gz",
+"SplitToMultipleFiles - Insurance.gz", "SplitToMultipleFiles - Loan.gz" and
+"SplitToMultipleFiles - Working Capital.gz"
 
 === Custom Input ===
 
-- examples.InputSplitRows
+The example demonstrate how to use the class InputCustom to create an Input
+class easily. In this example, our file has a column with comma-separated
+values, and we want to see them in individual rows. The custom input class will
+read one row from the file, split the column and present each in individual
+rows.
+
+  ./run examples.InputSplitRows
+
+The results are in combined1.out.gz
 
 === Custom Output ===
 
-- examples.OutputConcatRows
+The example demonstrate how to use the class OutputCustom to create an Output
+class easily. This example does the reverse of the Custom Input example: rows
+with the same value in the "id" column will have their other columns
+concatenated with commas, and only one row per id will be written in the file.
+
+  ./run examples.OutputConcatRows
+
+The results are in combined2.out.gz
 
 === Sorting ===
 
-- examples.Sort
+This example demonstrates how to sort an input file.
+
+  ./run examples.Sort
+
+The results are in sorted.0 to sorted.3 (gizpped files)
 
 === Inner Join ===
 
-- examples.InnerJoin
+This example demonstrates how to do a join on input files that are already
+sorted.
+
+  ./run examples.InnerJoin
+
+The results are in out.join.gz.
 
 === Left Join ===
 
-- examples.LeftJoin
+This example demonstrates how to do a left join on input files that are already
+sorted.
+
+  ./run examples.LeftJoin
+
+The results are in out.leftjoin.gz.
 
 === Self Join ===
 
-- examples.SelfJoin
+This example demonstrates how to do a left join on one input file that is
+already sorted.
+
+  ./run examples.SelfJoin
+
+The results are in out.selfjoin.gz.
 
 === Find new/changed/deleted ====
 
-+ examples.NewUpdateDelete
+This is a more advanced example that shows a possible implementation for the use
+case where we have a daily process with a full list of data, some of which might
+be new rows, some rows might have been modified, and some might have been
+deleted. We want to have 3 files: one containing the new rows, one containing
+the modified rows, and one containing the rows that remained the same.
+Additionnaly, we keep a KeyBinding file with the current state, to be used the
+next day.
+
+  ./run examples.NewUpdateDelete
+
+The results are in the files data_new.gz, data_changed.gz, data_same.gz, and
+_bind.current_data. In this particular scenario, _bind.current_data created
+today would be used in tomorrow's run.
 
