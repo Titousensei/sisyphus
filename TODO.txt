@@ -1,0 +1,11 @@
+Top priority:
+- More javadocs
+- More unit tests
+
+Medium priority:
+- create tests for Keys conditional actions
+
+Low priority:
+- class using heap for top N rows
+- InputCrossJoinSorted
+- InputFullOuterJoinSorted

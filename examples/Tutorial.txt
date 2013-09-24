@@ -1,0 +1,56 @@
+=== Basic Example ===
+
+- examples.Csv2Tsv
+
+=== Group-by + Count ===
+
+- examples.GroupByCount
+
+=== Sum ===
+
+- examples.AverageRate
+
+=== Filter ===
+
+- examples.FilterCountry brazil
+
+=== Modifier ===
+
+- examples.LineNumberUsage
+
+== Multiple Outputs (1) ===
+
+- examples.SplitIn2Files
+
+== Multiple Outputs (2) ===
+
+- examples.SplitToMultipleFiles
+
+=== Custom Input ===
+
+- examples.InputSplitRows
+
+=== Custom Output ===
+
+- examples.OutputConcatRows
+
+=== Sorting ===
+
+- examples.Sort
+
+=== Inner Join ===
+
+- examples.InnerJoin
+
+=== Left Join ===
+
+- examples.LeftJoin
+
+=== Self Join ===
+
+- examples.SelfJoin
+
+=== Find new/changed/deleted ====
+
++ examples.NewUpdateDelete
+
