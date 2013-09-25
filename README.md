@@ -1,10 +1,10 @@
-================
-=== Sisyphus ===
-================
+Sisyphus
+========
 
 A high-performance data processing framework in java.
 
-=== Motivation ===
+Motivation
+----------
 
 A common pattern when processing data is to read, modify and update some entries
 in a large data set. This kind of processing generally requires to scan the
@@ -60,7 +60,8 @@ The development of Sisyphus was sponsored by TheFind.com. TheFind.com uses
 Sisyphus to daily add, update, delete and prioritize some attributes of its
 500M products index.
 
-=== Overview ===
+Overview
+--------
 
 Sisyphus processes files in tabular form with a defined schema: each column
 must have a name. By default, the files are in gzipped TSV format: values are
@@ -81,7 +82,8 @@ For programs that need to run daily, the "output" directory can replace this
 run's "input directory, and the "tmp" directory can be deleted. (The previous
 "input" directory can be archived if needed.)
 
-=== Example ===
+Example
+-------
 
 A file dvd.tsv.gz containing a list of DVDs, with the following schema:
 - "title": the title of the movie
@@ -130,4 +132,9 @@ require a single scan. For instance:
 
 All these improvement will only have a marginal impact on performance because
 I/O is the bottleneck, and each file is only scanned once still.
+
+Licenses
+--------
+
+- Sisyphus is licensed under the terms of the GPL2, check the LICENSE file.
 
