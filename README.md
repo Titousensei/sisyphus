@@ -79,7 +79,7 @@ your current files for input, a "tmp" directory for all the temporary files,
 and an "output" directory where all the final outputs will be created.
 
 For programs that need to run daily, the "output" directory can replace this
-run's "input directory, and the "tmp" directory can be deleted. (The previous
+run's "input" directory, and the "tmp" directory can be deleted. (The previous
 "input" directory can be archived if needed.)
 
 Example
