@@ -4,7 +4,7 @@ package com.thefind.sisyphus;
  * @author Eric Gaudet
  * @author Seinjuti Chakraborty
  */
-class RowComparatorInteger
+public class RowComparatorInteger
 extends RowComparator
 {
   public RowComparatorInteger(String[] schema_sort)

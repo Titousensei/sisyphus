@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author Eric Gaudet
  */
-interface Action
+public interface Action
 extends SchemaIn, SchemaOut
 {
   public boolean open();

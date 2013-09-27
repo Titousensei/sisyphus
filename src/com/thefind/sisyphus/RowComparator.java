@@ -6,7 +6,7 @@ import java.util.*;
  * @author Eric Gaudet
  * @author Seinjuti Chakraborty
  */
-class RowComparator
+public class RowComparator
 implements Comparator<String[]>
 {
   protected final SchemaAdapter adapter1_;
