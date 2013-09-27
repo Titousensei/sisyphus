@@ -3,6 +3,9 @@
 *.orig
 *.tmp
 *.log
+docs/
+examples/results/
+test-reports/
 
 # Compiled source #
 ###################
