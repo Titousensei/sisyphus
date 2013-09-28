@@ -12,9 +12,6 @@
   <property name="include" location="include"/>
   <property name="docs"    location="docs"/>
 
-  <property name="examples"       value="examples"/>
-  <property name="examples.build" value="examples/build"/>
-
   <property name="testutil"       value="testutil"/>
   <property name="testutil.build" value="build-testutil"/>
 
@@ -62,19 +59,6 @@
         <pathelement path="${testutil.build}"/>
         <pathelement path="${test.build}"/>
         <!-- include all jar files  -->
-        <fileset dir="${include}">
-          <include name="**/*.jar"/>
-        </fileset>
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="examples" description="compile the examples" depends="compile">
-    <mkdir dir="${examples.build}"/>
-    <javac srcdir="${examples}" destdir="${examples.build}" debug="on" includeantruntime='false'>
-      <classpath>
-        <pathelement path="${build}"/>
-        <pathelement path="${classpath}"/>
         <fileset dir="${include}">
           <include name="**/*.jar"/>
         </fileset>
@@ -140,16 +124,12 @@
     <delete dir="${test.reports}"/>
   </target>
 
-  <target name="cleanexamples" description="Delete the test build">
-    <delete dir="${examples.build}"/>
-  </target>
-
   <target name="cleandocs" description="Delete the test build">
     <delete dir="${docs}"/>
   </target>
 
   <target name="clean" description="Delete the build, the library and the docs"
-      depends="cleantest, cleanexamples, cleandocs">
+      depends="cleantest, cleandocs">
     <delete dir="${build}"/>
     <delete dir="${test.build}"/>
     <delete dir="." includes="sisyphus*.jar"/>
