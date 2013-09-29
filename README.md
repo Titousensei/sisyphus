@@ -127,7 +127,7 @@ and can hold 85M entries in per GB of memory.
 I can further improve the program by adding actions that would still only
 require a single scan. For instance:
 - print statistics at the end: aggregate statistics about prices and/or num_rented
-- delete obsolete DVDs: skip the row if the movie is not in file deleted.txt
+- delete obsolete DVDs: skip the row if the movie is in file deleted.txt
 - insert new DVDs: process both files dvd.tsv.gz and new.txt
 
 All these improvement will only have a marginal impact on performance because
