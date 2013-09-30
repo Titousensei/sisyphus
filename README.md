@@ -13,9 +13,9 @@ applications, several modifications will be needed, sometimes for different
 parts of the data set. Updating a large subset (<10%) of a data set this way
 can be very expensive in a database.
 
-Another common pattern is to merge two or more data sets by completing the
-entries in one data set with data from the other data sets, for the entries that
-have common parts. Databases call this a "join" operation.
+Another common pattern is join operations, where you merge two or more data sets
+by completing the entries in one data set with data from the other data sets,
+for the entries that have common parts.
 
 Sisyphus is a java library that tries to address data processing problems where
 a full scan of data sets is required in order to extract or modify the data. It
@@ -28,7 +28,7 @@ bottleneck, and CPU is not an issue. Having a lot of memory can help, but it is
 not necessary.
 
 Other frameworks, such as MySql or Hadoop with or without Pig or Hive, have
-several drawbacks:
+several drawbacks for this class of problems:
 - perform only one operation at a time during a given scan
 - processes must have low-memory requirements
 - generate large amount of temporary data (x10)
