@@ -1,6 +1,6 @@
 <project name="sisyphus" default="compile" basedir=".">
     <description>
-        Sisypuhs, a high-performance data processing framework in java
+        Sisyphus, a high-performance data processing framework in java
     </description>
 
   <!-- set global properties for this build -->
