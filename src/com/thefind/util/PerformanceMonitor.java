@@ -265,7 +265,7 @@ public class PerformanceMonitor
       sb.append(String.format(  "Start: %,dMB / %,dMB",   getHeapUsedStart(),   getHeapCommittedStart()))
         .append(String.format(", Average: %,dMB / %,dMB", getHeapUsedAverage(), getHeapCommittedAverage()))
         .append(String.format(", Peak: %,dMB / %,dMB",    getHeapUsedPeak(),    getHeapCommittedPeak()))
-        .append(String.format(", Last: %,dMB / %,dMB",     getHeapUsedLast(),    getHeapCommittedLast()));
+        .append(String.format(", Last: %,dMB / %,dMB",    getHeapUsedLast(),    getHeapCommittedLast()));
       long total_gc = 0L;
       for (int i=0 ; i<num_gc_ ; i++) {
         long gctime = getGcTime(i);
