@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * This class contains only utility methods related to String manipulations.
+ *
  * @author Eric Gaudet
  */
 public class StringUtil
