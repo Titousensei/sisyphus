@@ -83,22 +83,6 @@ public class StringUtil
   /**
    *
    */
-  static long bytesToLong64(byte[] ary, int off)
-  {
-    // this follows network byte order (big endian)
-    return ((((long) ary[off + 0] & 0xff) << 56) |
-            (((long) ary[off + 1] & 0xff) << 48) |
-            (((long) ary[off + 2] & 0xff) << 40) |
-            (((long) ary[off + 3] & 0xff) << 32) |
-            (((long) ary[off + 4] & 0xff) << 24) |
-            (((long) ary[off + 5] & 0xff) << 16) |
-            (((long) ary[off + 6] & 0xff) << 8) |
-            (((long) ary[off + 7] & 0xff)));
-  }
-
-  /**
-   *
-   */
   public static String join(String[] l, String delim)
   {
     StringBuilder result = null;
