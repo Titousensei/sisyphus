@@ -398,8 +398,9 @@ implements Serializable //, Collection<Long>
     }
   }
 
+  @Override
   public Iterator iterator() {
-    return new NativeHashBindingIterator();
+    return nativeIterator();
   }
 
   public NativeHashBindingIterator nativeIterator() {

@@ -471,11 +471,12 @@ implements Serializable //, Collection<Long>
     }
   }
 
+  @Override
   public Iterator iterator() {
-    return new NativeHashLookupIterator();
+    return nativeIterator();
   }
 
-  public NativeHashLookupIterator valueIterator() {
+  public NativeHashLookupIterator nativeIterator() {
     return new NativeHashLookupIterator();
   }
 

@@ -467,15 +467,16 @@ implements Serializable //, Collection<Double>
     }
   }
 
+  @Override
   public Iterator iterator() {
-    return new NativeHashLookupIterator();
+    return nativeIterator();
   }
 
-  public NativeHashLookupIterator valueIterator() {
-    return new NativeHashLookupIterator();
+  public NativeHashDoubleIterator nativeIterator() {
+    return new NativeHashDoubleIterator();
   }
 
-  public final class NativeHashLookupIterator
+  public final class NativeHashDoubleIterator
   implements Iterator<Entry>
   {
     private int currBucketNum_ = 0;
@@ -483,7 +484,7 @@ implements Serializable //, Collection<Double>
     private boolean handlingZero_ = false;
     private int currentCount_ = 0;
 
-    private NativeHashLookupIterator() {}
+    private NativeHashDoubleIterator() {}
 
     @Override
     public boolean hasNext()
