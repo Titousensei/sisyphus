@@ -13,15 +13,34 @@ public final class Assert
 
   static <T> boolean contentEquals(Collection<T> expected, Collection<T> actual)
   {
+    Map<T, Integer> counts = new HashMap();
     Iterator<T> it1 = expected.iterator();
     while (it1.hasNext()) {
-      if (!actual.contains(it1.next())) { return false; }
+      T elem = it1.next();
+      Integer c = counts.get(elem);
+      if (c==null) {
+        counts.put(elem, Integer.valueOf(1));
+      }
+      else {
+        counts.put(elem, Integer.valueOf(c+1));
+      }
     }
     Iterator<T> it2 = actual.iterator();
     while (it2.hasNext()) {
-      if (!expected.contains(it2.next())) { return false; }
+      T elem = it2.next();
+      Integer c = counts.get(elem);
+      if (c==null) {
+        return false;
+      }
+      else if (c==1) {
+        counts.remove(elem);
+      }
+      else {
+        counts.put(elem, Integer.valueOf(c-1));
+      }
     }
-    return true;
+
+    return (counts.size()==0);
   }
 
   /**
