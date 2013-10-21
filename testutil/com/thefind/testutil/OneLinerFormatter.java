@@ -15,10 +15,6 @@ import org.apache.tools.ant.taskdefs.optional.junit.JUnitVersionHelper;
  * Inspired by the BriefJUnitResultFormatter and
  * XMLJUnitResultFormatter.
  *
- * @see FormatterElement
- * @see BriefJUnitResultFormatter
- * @see XMLJUnitResultFormatter
- *
  * @author Eric Gaudet
  */
 public class OneLinerFormatter
