@@ -36,6 +36,13 @@ import java.lang.management.ThreadMXBean;
  */
 public class PerformanceMonitor
 {
+  protected final static Map<String, Boolean> IS_GC_BLOCKING = new HashMap();
+
+  static {
+    IS_GC_BLOCKING.put("PS Scavenge", Boolean.FALSE);
+    IS_GC_BLOCKING.put("PS MarkSweep", Boolean.TRUE);
+  };
+
   protected final static long MB_SHIFT = 20L;
   protected final static long NANO_TO_MILLI = 1000L*1000L;
 
@@ -233,13 +240,25 @@ public class PerformanceMonitor
   { return gcbeans_.get(i).getCollectionCount() - gc_cnt_[i]; }
 
   public long getGcTime(int i)
-  { return gcbeans_.get(i).getCollectionTime() - gc_time_[i]; }
+  {
+    GarbageCollectorMXBean gc = gcbeans_.get(i);
+    long ret = gc.getCollectionTime() - gc_time_[i];
+    if (IS_GC_BLOCKING.get(gc.getName())==Boolean.TRUE) {
+      return ret;
+    }
+    else {
+      return (ret / num_cpu_);
+    }
+  }
+
+  public String getGcName(int i)
+  { return gcbeans_.get(i).getName(); }
 
   public long getGcTime()
   {
     long ret = 0L;
     for (int i=0 ; i<num_gc_ ; i++) {
-      ret += gcbeans_.get(i).getCollectionTime() - gc_time_[i];
+      ret += getGcTime(i);
     }
     return ret;
   }
