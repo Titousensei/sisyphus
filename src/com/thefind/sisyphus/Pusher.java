@@ -15,7 +15,7 @@ import com.thefind.util.StringUtil;
 public class Pusher
 {
   protected final static String DEFAULT_NAME = "Pusher";
-  protected final static String VERSION = "0.3.0";
+  protected final static String VERSION = "0.3.1";
 
   protected final List<Action> actions_ = new ArrayList();
 
