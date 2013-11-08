@@ -25,6 +25,51 @@ public class MurmurHash3
   public void update(byte[] b)
   { value_ = MurmurHash3.calc(b, 0, b.length, value_); }
 
+  public void update(byte v)
+  {
+    byte[] b = new byte[1];
+    b[0] = v;
+    value_ = MurmurHash3.calc(b, 0, b.length, value_);
+  }
+
+  public void update(short v)
+  {
+    byte[] b = new byte[2];
+    b[0] = (byte) (v&0xFF);
+    b[1] = (byte) ((v>>8)&0xFF);
+    value_ = MurmurHash3.calc(b, 0, b.length, value_);
+  }
+
+  public void update(int v)
+  {
+    byte[] b = new byte[4];
+    b[0] = (byte) (v&0xFF);
+    b[1] = (byte) ((v>>8)&0xFF);
+    b[2] = (byte) ((v>>16)&0xFF);
+    b[3] = (byte) ((v>>24)&0xFF);
+    value_ = MurmurHash3.calc(b, 0, b.length, value_);
+  }
+
+  public void update(float v)
+  { update(Float.floatToRawIntBits(v)); }
+
+  public void update(long v)
+  {
+    byte[] b = new byte[8];
+    b[0] = (byte) (v&0xFF);
+    b[1] = (byte) ((v>>8)&0xFF);
+    b[2] = (byte) ((v>>16)&0xFF);
+    b[3] = (byte) ((v>>24)&0xFF);
+    b[4] = (byte) ((v>>32)&0xFF);
+    b[5] = (byte) ((v>>40)&0xFF);
+    b[6] = (byte) ((v>>48)&0xFF);
+    b[7] = (byte) ((v>>56)&0xFF);
+    value_ = MurmurHash3.calc(b, 0, b.length, value_);
+  }
+
+  public void update(double v)
+  { update(Double.doubleToRawLongBits(v)); }
+
   public int getInt()
   { return value_; }
 
