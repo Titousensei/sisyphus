@@ -536,7 +536,7 @@ implements Serializable //, Collection<Double>
       }
 
       //skip over empty buckets
-      while (table_[currBucketNum_] == null) {
+      while (currBucketNum_<table_.length && table_[currBucketNum_] == null) {
         currBucketNum_++;
       }
 
@@ -547,8 +547,12 @@ implements Serializable //, Collection<Double>
 
       //check if we have reached the end of this block
       if (currCellNum_ >= numKeys || table_[currBucketNum_][currCellNum_]==0) {
-        currBucketNum_++;
         currCellNum_ = 0;
+        currBucketNum_++;
+        //skip over empty buckets
+        while (currBucketNum_<table_.length && table_[currBucketNum_] == null) {
+          currBucketNum_++;
+        }
       }
 
       currentCount_++;
