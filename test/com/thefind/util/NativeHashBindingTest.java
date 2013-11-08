@@ -24,6 +24,7 @@ public class NativeHashBindingTest
 
   private int orig_size_;
   private long key_sum_;
+  private long val_sum_;
 
   @BeforeClass
   public static void runBeforeOnce() {
@@ -42,11 +43,13 @@ public class NativeHashBindingTest
     nhl_ = new NativeHashBinding();
     orig_size_ = 0;
     key_sum_ = 0L;
+    val_sum_ = 0L;
 
     for (long j=0L ; j<N_KEY ; j++) {
       if (j%3L==0L) {
         nhl_.put(j, j+1000L);
         key_sum_ += j;
+        val_sum_ += j+1000L;
         ++ orig_size_;
       }
     }
@@ -209,13 +212,15 @@ public class NativeHashBindingTest
   @Test
   public void iterator()
   {
+    long key_sum = 0L;
+    long val_sum = 0L;
     Iterator<Entry> it = nhl_.iterator();
     int count = 0;
-    long sum = 0L;
     while (it.hasNext()) {
       ++ count;
       Entry e = it.next();
-      sum += e.key;
+      key_sum += e.key;
+      val_sum += e.value;
       assertTrue("Key too small: "+e.key, e.key>=0L);
       assertTrue("Key too big: "+e.key, e.key<N_KEY);
       assertSame("Unexpected key: "+e.key, 0L, e.key%3L);
@@ -224,30 +229,51 @@ public class NativeHashBindingTest
     }
 
     assertEquals("Wrong count", orig_size_, count);
-    assertEquals("Missing keys (wrong keysum)", key_sum_, sum);
+    assertEquals("Missing keys (wrong checksum)", key_sum_, key_sum);
+    assertEquals("Missing values (wrong checksum)", val_sum_, val_sum);
+  }
+
+  @Test
+  public void iteratorNative()
+  {
+    long val_sum = 0L;
+    NativeHashBindingIterator it = nhl_.nativeIterator();
+    int count = 0;
+    while (it.hasNext()) {
+      ++ count;
+      long v = it.nextValue();
+      val_sum += v;
+    }
+
+    assertEquals("Wrong count", orig_size_, count);
+    assertEquals("Missing values (wrong checksum)", val_sum_, val_sum);
   }
 
   @Test
   public void iteratorSmallTable()
   {
+    key_sum_ = 0L;
+    val_sum_ = 0L;
     nhl_ = new NativeHashBinding();
     orig_size_ = 0;
-    key_sum_ = 0L;
     for (long j=0L ; j<10L ; j++) {
       if (j%3L==0L) {
         nhl_.put(j, j+1000L);
         key_sum_ += j;
+        val_sum_ += j+1000L;
         ++ orig_size_;
       }
     }
 
+    long key_sum = 0L;
+    long val_sum = 0L;
     Iterator<Entry> it = nhl_.iterator();
     int count = 0;
-    long sum = 0L;
     while (it.hasNext()) {
       ++ count;
       Entry e = it.next();
-      sum += e.key;
+      key_sum += e.key;
+      val_sum += e.value;
       assertTrue("Key too small: "+e.key, e.key>=0L);
       assertTrue("Key too big: "+e.key, e.key<10L);
       assertSame("Unexpected key: "+e.key, 0L, e.key%3L);
@@ -256,19 +282,22 @@ public class NativeHashBindingTest
     }
 
     assertEquals("Wrong count", orig_size_, count);
-    assertEquals("Missing keys (wrong keysum)", key_sum_, sum);
+    assertEquals("Missing keys (wrong checksum)", key_sum_, key_sum);
+    assertEquals("Missing values (wrong checksum)", val_sum_, val_sum);
   }
 
   @Test
   public void iteratorRestore()
   {
+    long key_sum = 0L;
+    long val_sum = 0L;
     NativeHashBindingIterator it1 = nhl_.nativeIterator();
     int count = 0;
-    long sum = 0L;
     for (int i=0 ; i<100 ; ++ i) {
       ++ count;
       Entry e = it1.next();
-      sum += e.key;
+      key_sum += e.key;
+      val_sum += e.value;
       assertTrue("Key too small: "+e.key, e.key>=0L);
       assertTrue("Key too big: "+e.key, e.key<N_KEY);
       assertSame("Unexpected key: "+e.key, 0L, e.key%3L);
@@ -283,7 +312,8 @@ public class NativeHashBindingTest
     while (it2.hasNext()) {
       ++ count;
       Entry e = it2.next();
-      sum += e.key;
+      key_sum += e.key;
+      val_sum += e.value;
       assertTrue("Key too small: "+e.key, e.key>=0L);
       assertTrue("Key too big: "+e.key, e.key<N_KEY);
       assertSame("Unexpected key: "+e.key, 0L, e.key%3L);
@@ -292,7 +322,8 @@ public class NativeHashBindingTest
     }
 
     assertEquals("Wrong count", orig_size_, count);
-    assertEquals("Missing keys (wrong keysum)", key_sum_, sum);
+    assertEquals("Missing keys (wrong checksum)", key_sum_, key_sum);
+    assertEquals("Missing values (wrong checksum)", val_sum_, val_sum);
   }
 }
 
