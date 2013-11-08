@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export CLASSPATH="./build::./include/jline-0.9.94.jar:./include/opencsv-2.3.jar:./include/junit-4.8.1.jar:./build-test:./build-testutil"
+
+java org.junit.runner.JUnitCore $*

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export CLASSPATH="./build::./include/jline-0.9.94.jar:./include/opencsv-2.3.jar"
+
+java $*
