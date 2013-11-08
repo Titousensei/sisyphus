@@ -104,35 +104,56 @@ implements Serializable
     return new KeySet(keyname);
   }
 
-/*
-  public void dumpTsv(String filename) throws IOException
+  public static KeySet loadKeySetFromTsv(String filepath, String colkey)
   {
-    BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-    NativeHashIterator it = set_.keyIterator();
-    while (it.hasNext()) {
-      writer.write(it.nextKey() +"\n");
-    }
-    writer.close();
+    KeySet ret = new KeySet(colkey);
+
+    Input in_key = new InputFile(filepath, new String[] { colkey });
+    new Pusher()
+        .always(new OutputKey(ret))
+        .push(in_key);
+
+    System.err.println("[KeySet.loadFromFile] loaded: "+filepath+" -> "+ret.toString());
+    return ret;
   }
-*/
 
   @Override
   public void dumpTsv(PrintStream out)
   {
+    int line_count = 0;
     NativeHashIterator it = set_.keyIterator();
     while (it.hasNext()) {
+      if ((line_count % 1000000) == 0) {
+        System.err.println("... "+(line_count/1000000)+"M");
+      }
+      else if ( (line_count<1000000)
+      && ((line_count == 300000) || (line_count == 100000)
+         || (line_count == 30000)  || (line_count == 10000)
+         || (line_count == 3000)   || (line_count == 1000))
+      ) {
+        System.err.println("... "+(line_count/1000)+"K");
+      }
       out.println(it.nextKey());
+      ++ line_count;
     }
+    System.err.println("DONE "+line_count);
   }
 
   public static void main(String[] args)
   {
     KeySet map;
-    try {
-      map = KeySet.load(args[0]);
+    if ("-tsv".equals(args[0])) {
+      map = loadKeySetFromTsv(args[1], args[2]);
+      map.save(args[3]);
+      return;
     }
-    catch (LoadingException ex) {
-      throw new RuntimeException(ex);
+    else {
+      try {
+        map = KeySet.load(args[0]);
+      }
+      catch (LoadingException ex) {
+        throw new RuntimeException(ex);
+      }
     }
 
     int i=1;

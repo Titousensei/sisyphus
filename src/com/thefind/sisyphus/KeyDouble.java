@@ -160,23 +160,56 @@ implements Serializable
   public void dumpTsv(PrintStream out)
   {
     Iterator<NativeHashDouble.Entry> it = kdouble_.iterator();
+    int line_count = 0;
     while (it.hasNext()) {
+      if ((line_count % 1000000) == 0) {
+        System.err.println("... "+(line_count/1000000)+"M");
+      }
+      else if ( (line_count<1000000)
+      && ((line_count == 300000) || (line_count == 100000)
+         || (line_count == 30000)  || (line_count == 10000)
+         || (line_count == 3000)   || (line_count == 1000))
+      ) {
+        System.err.println("... "+(line_count/1000)+"K");
+      }
       NativeHashDouble.Entry e = it.next();
       out.print(e.key);
       out.print('\t');
       out.print(e.value);
       out.println();
+      ++ line_count;
     }
+    System.err.println("DONE "+line_count);
+  }
+
+  public static KeyDouble loadKeyDoubleFromTsv(String filepath, String colkey, String colvalue)
+  {
+    KeyDouble ret = new KeyDouble(colkey, colvalue);
+
+    Input in_key = new InputFile(filepath, colkey, colvalue);
+    new Pusher()
+        .always(new OutputKeyDouble(ret))
+        .push(in_key);
+
+    System.err.println("[KeyDouble.loadFromFile] loaded: "+filepath+" -> "+ret.toString());
+    return ret;
   }
 
   public static void main(String[] args)
   {
     KeyDouble bind;
-    try {
-      bind = KeyDouble.load(args[0]);
+    if ("-tsv".equals(args[0])) {
+      bind = loadKeyDoubleFromTsv(args[1], args[2], args[3]);
+      bind.save(args[4]);
+      return;
     }
-    catch (LoadingException ex) {
-      throw new RuntimeException(ex);
+    else {
+      try {
+        bind = KeyDouble.load(args[0]);
+      }
+      catch (LoadingException ex) {
+        throw new RuntimeException(ex);
+      }
     }
 
     if ("-value".equals(args[1])) {

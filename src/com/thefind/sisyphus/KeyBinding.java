@@ -158,38 +158,56 @@ implements Serializable
   public void dumpTsv(PrintStream out)
   {
     Iterator<NativeHashBinding.Entry> it = bind_.iterator();
+    int line_count = 0;
     while (it.hasNext()) {
+      ++ line_count;
+      if ((line_count % 1000000) == 0) {
+        System.err.println("... "+(line_count/1000000)+"M");
+      }
+      else if ( (line_count<1000000)
+      && ((line_count == 300000) || (line_count == 100000)
+         || (line_count == 30000)  || (line_count == 10000)
+         || (line_count == 3000)   || (line_count == 1000))
+      ) {
+        System.err.println("... "+(line_count/1000)+"K");
+      }
       NativeHashBinding.Entry e = it.next();
       out.print(e.key);
       out.print('\t');
       out.print(e.value);
       out.println();
     }
+    System.err.println("DONE "+line_count);
   }
 
-/*
-  public void dumpTsvToFile(String fileName) throws IOException
+  public static KeyBinding loadKeyBindingFromTsv(String filepath, String colkey, String colvalue)
   {
-    BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-    Iterator<NativeHashBinding.Entry> it = bind_.iterator();
-    while (it.hasNext()) {
-      NativeHashBinding.Entry e = it.next();
-      writer.write((new Long(e.key).toString()));
-      writer.write('\t');
-      writer.write((new Long(e.value).toString()));
-      writer.write('\n');
-    }
-    writer.close();
+    KeyBinding ret = new KeyBinding(colkey, colvalue);
+
+    Input in_key = new InputFile(filepath, colkey, colvalue);
+    new Pusher()
+        .always(new OutputKeyBinding(ret))
+        .push(in_key);
+
+    System.err.println("[KeyBinding.loadFromFile] loaded: "+filepath+" -> "+ret.toString());
+    return ret;
   }
-*/
+
   public static void main(String[] args)
   {
     KeyBinding bind;
-    try {
-      bind = KeyBinding.load(args[0]);
+    if ("-tsv".equals(args[0])) {
+      bind = loadKeyBindingFromTsv(args[1], args[2], args[3]);
+      bind.save(args[4]);
+      return;
     }
-    catch (LoadingException ex) {
-      throw new RuntimeException(ex);
+    else {
+      try {
+        bind = KeyBinding.load(args[0]);
+      }
+      catch (LoadingException ex) {
+        throw new RuntimeException(ex);
+      }
     }
 
     if ("-value".equals(args[1])) {

@@ -219,7 +219,7 @@ implements Serializable
     return new KeyMap(keyname, valuename);
   }
 
-  public static KeyMap loadFromFile(String filepath, String colkey, String colvalue)
+  public static KeyMap loadKeyMapFromTsv(String filepath, String colkey, String colvalue)
   {
     KeyMap ret = new KeyMap(colkey, colvalue);
 
@@ -235,23 +235,43 @@ implements Serializable
   public void dumpTsv(PrintStream out)
   {
     Iterator<NativeHashLookup.Entry> it = map_.iterator();
+    int line_count = 0;
     while (it.hasNext()) {
+      if ((line_count % 1000000) == 0) {
+        System.err.println("... "+(line_count/1000000)+"M");
+      }
+      else if ( (line_count<1000000)
+      && ((line_count == 300000) || (line_count == 100000)
+         || (line_count == 30000)  || (line_count == 10000)
+         || (line_count == 3000)   || (line_count == 1000))
+      ) {
+        System.err.println("... "+(line_count/1000)+"K");
+      }
       NativeHashLookup.Entry e = it.next();
       out.print(e.key);
       out.print('\t');
       out.print(e.value);
       out.println();
+      ++ line_count;
     }
+    System.err.println("DONE "+line_count);
   }
 
   public static void main(String[] args)
   {
     KeyMap bind;
-    try {
-      bind = KeyMap.load(args[0]);
+    if ("-tsv".equals(args[0])) {
+      bind = loadKeyMapFromTsv(args[1], args[2], args[3]);
+      bind.save(args[4]);
+      return;
     }
-    catch (LoadingException ex) {
-      throw new RuntimeException(ex);
+    else {
+      try {
+        bind = KeyMap.load(args[0]);
+      }
+      catch (LoadingException ex) {
+        throw new RuntimeException(ex);
+      }
     }
 
     if ("-value".equals(args[1])) {
