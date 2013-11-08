@@ -228,6 +228,38 @@ public class NativeHashBindingTest
   }
 
   @Test
+  public void iteratorSmallTable()
+  {
+    nhl_ = new NativeHashBinding();
+    orig_size_ = 0;
+    key_sum_ = 0L;
+    for (long j=0L ; j<10L ; j++) {
+      if (j%3L==0L) {
+        nhl_.put(j, j+1000L);
+        key_sum_ += j;
+        ++ orig_size_;
+      }
+    }
+
+    Iterator<Entry> it = nhl_.iterator();
+    int count = 0;
+    long sum = 0L;
+    while (it.hasNext()) {
+      ++ count;
+      Entry e = it.next();
+      sum += e.key;
+      assertTrue("Key too small: "+e.key, e.key>=0L);
+      assertTrue("Key too big: "+e.key, e.key<10L);
+      assertSame("Unexpected key: "+e.key, 0L, e.key%3L);
+      long c_exp = e.key+1000L;
+      assertEquals("Wrong value at "+e.key, c_exp, e.value);
+    }
+
+    assertEquals("Wrong count", orig_size_, count);
+    assertEquals("Missing keys (wrong keysum)", key_sum_, sum);
+  }
+
+  @Test
   public void iteratorRestore()
   {
     NativeHashBindingIterator it1 = nhl_.nativeIterator();
