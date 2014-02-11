@@ -187,7 +187,7 @@ implements Serializable
     KeyDouble ret = new KeyDouble(colkey, colvalue);
 
     Input in_key = new InputFile(filepath, colkey, colvalue);
-    new Pusher()
+    new Pusher("loadKeyDoubleFromTsv")
         .always(new OutputKeyDouble(ret))
         .push(in_key);
 

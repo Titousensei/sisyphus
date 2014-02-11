@@ -185,7 +185,7 @@ implements Serializable
     KeyBinding ret = new KeyBinding(colkey, colvalue);
 
     Input in_key = new InputFile(filepath, colkey, colvalue);
-    new Pusher()
+    new Pusher("loadKeyBindingFromTsv")
         .always(new OutputKeyBinding(ret))
         .push(in_key);
 
