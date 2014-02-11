@@ -80,7 +80,7 @@ public class IOUtil
       }
     }
     else {
-      if (!new File(path).isFile()) {
+      if (new File(path).isFile()) {
         throw new IllegalStateException("File already exists: "+path);
       }
     }
