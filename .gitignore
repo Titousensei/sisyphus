@@ -6,6 +6,7 @@
 docs/
 examples/results*
 test-reports/
+debug
 
 # Compiled source #
 ###################
