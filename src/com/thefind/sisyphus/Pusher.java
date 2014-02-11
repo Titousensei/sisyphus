@@ -51,7 +51,7 @@ public class Pusher
 
     limit_ = limit;
     if (limit_>0) {
-      System.err.println("["+name_+"] LIMIT Inputs = "+limit_);
+      System.err.println(String.format("[%s] LIMIT Inputs = %,d", name_, limit_));
     }
 
     sample_ = sample;
