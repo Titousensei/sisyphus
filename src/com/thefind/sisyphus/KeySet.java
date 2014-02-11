@@ -109,7 +109,7 @@ implements Serializable
     KeySet ret = new KeySet(colkey);
 
     Input in_key = new InputFile(filepath, new String[] { colkey });
-    new Pusher()
+    new Pusher("loadKeySetFromTsv")
         .always(new OutputKey(ret))
         .push(in_key);
 
