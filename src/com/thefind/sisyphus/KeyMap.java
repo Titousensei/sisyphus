@@ -86,7 +86,7 @@ implements Serializable
     }
 
     System.err.println("[KeyMap.countValues] --- "+src.getSchemaOut()+" -> "+getSchemaIn());
-    new Pusher()
+    new Pusher("countValues KeyMap")
         .always(new KeyMapIncrement(this, 1))
         .push(new InputKeyMap(src));
 
@@ -101,8 +101,8 @@ implements Serializable
       throw new SchemaException("Destination key \""+key1+"\" must be the same as source value \""+val0+"\"");
     }
 
-    System.err.println("[KeyMap.countValues] --- "+src.getSchemaOut()+" -> "+getSchemaIn());
-    new Pusher()
+    System.err.println("[KeyBinding.countValues] --- "+src.getSchemaOut()+" -> "+getSchemaIn());
+    new Pusher("countValues KeyBinding")
         .always(new KeyMapIncrement(this, 1))
         .push(new InputKeyBinding(src));
 
@@ -114,13 +114,33 @@ implements Serializable
     Key rows_remove = new KeySet(schema_.get(0));
     Input in_rows   = new InputKeyMap(this);
 
-    new Pusher()
+    new Pusher("filterExclude find")
         .onlyIf(tst, new OutputKey(rows_remove))
         .push(in_rows);
 
     int num_remove = rows_remove.size();
     if (num_remove>0) {
-      new Pusher()
+      new Pusher("filterExclude remove")
+          .always(new KeyDeleter(this))
+          .push(new InputKey(rows_remove));
+    }
+
+    return this;
+  }
+
+  public KeyMap filterOnly(Test tst)
+  {
+    Key rows_remove = new KeySet(schema_.get(0));
+    Input in_rows   = new InputKeyMap(this);
+
+    new Pusher("filterOnly find")
+        .onlyIf(tst, BreakAfter.NO_OP)
+        .always(new OutputKey(rows_remove))
+        .push(in_rows);
+
+    int num_remove = rows_remove.size();
+    if (num_remove>0) {
+      new Pusher("filterOnly remove")
           .always(new KeyDeleter(this))
           .push(new InputKey(rows_remove));
     }
@@ -224,7 +244,7 @@ implements Serializable
     KeyMap ret = new KeyMap(colkey, colvalue);
 
     Input in_key = new InputFile(filepath, new String[] { colkey, colvalue});
-    new Pusher()
+    new Pusher("loadKeyMapFromTsv")
         .always(new OutputKeyMap(ret))
         .push(in_key);
 
