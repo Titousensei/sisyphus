@@ -8,8 +8,6 @@ import java.util.*;
 public class IfAllEmpty
 extends TestColumns
 {
-  protected final List<String> schema_;
-
   public IfAllEmpty(String... columns)
   { super(columns); }
 
