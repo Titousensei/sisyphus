@@ -126,7 +126,7 @@ The results are in out.leftjoin.gz.
 
 === Self Join ===
 
-This example demonstrates how to do a left join on one input file that is
+This example demonstrates how to do a self join on one input file that is
 already sorted.
 
   ./run examples.SelfJoin
