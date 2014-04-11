@@ -328,7 +328,6 @@ implements Serializable //, Collection<Long>
    * Remove the specified key from the NativeHashLookup.
    * Does not get the memory back, except if it's the last key of the block.
    * Returns whether it was there.
-   * TODO: this method was not tested
    */
   @Override
   public boolean remove(long key)

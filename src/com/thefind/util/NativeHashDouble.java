@@ -25,8 +25,8 @@ implements Serializable //, Collection<Double>
   protected double value_zero_;
 
   /**
-   * Constructs an empty NativeHashLookup with a variable index size.
-   * This NativeHashLookup uses default parameters for good average performance.
+   * Constructs an empty NativeHashDouble with a variable index size.
+   * This NativeHashDouble uses default parameters for good average performance.
    * The order of the keys is not guaranteed to be stable and can change when
    * the index is resized.
    */
@@ -38,7 +38,7 @@ implements Serializable //, Collection<Double>
   }
 
   /**
-   * Creates an empty NativeHashLookup with a constant index size,
+   * Creates an empty NativeHashDouble with a constant index size,
    * with optimal performance for up to initialCapacity.
    * Since the index is never resized, the order of the keys doesn't change.
    * Use this contructor to fine-tune performance or if you need a stable
@@ -114,7 +114,7 @@ implements Serializable //, Collection<Double>
   }
 
   /**
-   * Insert the specified key is in the NativeHashLookup.
+   * Insert the specified key is in the NativeHashDouble.
    * Returns the value it had.
    */
   public synchronized double put(long key, double value)
@@ -222,7 +222,7 @@ implements Serializable //, Collection<Double>
   }
 
   /**
-   * Insert the specified key is in the NativeHashLookup
+   * Insert the specified key is in the NativeHashDouble
    * ONLY if it's not already present.
    * Returns whether the value was new and inserted or not.
    */
@@ -321,10 +321,9 @@ implements Serializable //, Collection<Double>
   }
 
   /**
-   * Remove the specified key from the NativeHashLookup.
+   * Remove the specified key from the NativeHashDouble.
    * Does not get the memory back, except if it's the last key of the block.
    * Returns whether it was there.
-   * TODO: this method was not tested
    */
   @Override
   public boolean remove(long key)
@@ -395,7 +394,7 @@ implements Serializable //, Collection<Double>
   {
     long t0=0, t1;
     if (trace_) {
-      System.err.println("[NativeHashLookup] resizing index to "+newCapacity+", size="+size_);
+      System.err.println("[NativeHashDouble] resizing index to "+newCapacity+", size="+size_);
       t0 = System.currentTimeMillis();
     }
     int oldCapacity = table_.length;
@@ -461,7 +460,7 @@ implements Serializable //, Collection<Double>
 
     if (trace_) {
       t1 = System.currentTimeMillis();
-      System.err.println("[NativeHashLookup] resizing time="+(t1-t0)+" ms, loadFactor="
+      System.err.println("[NativeHash] resizing time="+(t1-t0)+" ms, loadFactor="
                          +loadFactor_+" newCapacity="+newCapacity
                          +" threshold="+threshold_);
     }
