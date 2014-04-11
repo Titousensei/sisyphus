@@ -107,7 +107,7 @@ public class Pusher
               }
             }
           }
-          if (debug_) System.err.println("["+name_+"] ... DEBUG - ready Action "+i+": "+act);
+          if (debug_) { System.err.println("["+name_+"] ... DEBUG - ready Action "+i+": "+act); }
           act.ready(schema_row);
         }
         in.ready(schema_row);
