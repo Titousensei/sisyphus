@@ -80,6 +80,14 @@ implements Action
     }
   }
 
+  protected void warning(String message)
+  {
+    num_warnings_ ++;
+    if (num_warnings_<10) {
+      System.err.println(getClass().getSimpleName() + " WARNING - " + message);
+    }
+  }
+
   @Override
   public boolean sameAs(long that)
   { return false; }
