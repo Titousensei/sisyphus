@@ -15,7 +15,7 @@ import com.thefind.util.StringUtil;
 public class Pusher
 {
   protected final static String DEFAULT_NAME = "Pusher";
-  protected final static String VERSION = "0.3.1";
+  protected final static String VERSION = "0.3.2";
 
   protected final List<Action> actions_ = new ArrayList();
 
@@ -90,7 +90,7 @@ public class Pusher
     PerformanceMonitor mon = new PerformanceMonitor();
     for (int z=0 ; z<inputs.length ; z++) {
       Input in = inputs[z];
-      System.err.println("["+name_+"] Start --- "+in);
+      System.err.println("["+name_+"] Start --- " + in + " - " + new Date());
       if (in.open()) {
         long t0 = System.currentTimeMillis();
         List<String> schema_row = new ArrayList(in.getSchemaOut());
@@ -180,18 +180,19 @@ public class Pusher
               }
             }
 
-            if ((line_count % 1000000) == 0) {
-              long t1 = System.currentTimeMillis();
-              System.err.println("["+name_+"] ... "+(line_count/1000000)+"M - "+StringUtil.readableTime(t1-t0));
-              if (debug_lines_==-1) System.err.println("["+name_+"] ... DEBUG - row "+line_count+" "+Arrays.toString(row)+" - "+in.getRowSize()+" columns");
-              mon.measure();
-            }
-            else if ( (line_count<1000000)
-            && ((line_count == 300000) || (line_count == 100000)
+            if ( (line_count<1000000)
+            && (  (line_count == 300000) || (line_count == 100000)
                || (line_count == 30000)  || (line_count == 10000)
                || (line_count == 3000)   || (line_count == 1000))
             ) {
-              System.err.println("["+name_+"] ... "+(line_count/1000)+"K");
+              long t1 = System.currentTimeMillis();
+              System.err.println("["+name_+"] ... "+(line_count/1000)+"K - "+StringUtil.readableTime(t1-t0));
+              if (debug_lines_==-1) System.err.println("["+name_+"] ... DEBUG - row "+line_count+" "+Arrays.toString(row)+" - "+in.getRowSize()+" columns");
+              mon.measure();
+            }
+            else if ((line_count % 1000000) == 0) {
+              long t1 = System.currentTimeMillis();
+              System.err.println("["+name_+"] ... "+(line_count/1000000)+"M - "+StringUtil.readableTime(t1-t0));
               if (debug_lines_==-1) System.err.println("["+name_+"] ... DEBUG - row "+line_count+" "+Arrays.toString(row)+" - "+in.getRowSize()+" columns");
               mon.measure();
             }
@@ -226,7 +227,7 @@ public class Pusher
               : (rpm>0.0)
                 ? String.format("%,d rpm)", Math.round(1000.0*rpm))
                 : "inf. rpm)")
-            );
+            + " - " + new Date());
         if (profiler_) {
           System.err.print(" - profiler: ");
           System.err.print(Math.round((1.0*prof_in)/line_count)/1000.0);
