@@ -3,6 +3,8 @@ package com.thefind.sisyphus;
 import java.util.*;
 import java.util.concurrent.*;
 
+import com.thefind.util.CollectionUtil;
+
 /**
  * @author Eric Gaudet
  */
@@ -15,9 +17,12 @@ extends Input
   private Generator gen_;
 
   public InputYielder(String[] out_cols)
+  { this(CollectionUtil.asConstList(out_cols)); }
+
+  protected InputYielder(List<String> out_cols)
   {
     super(out_cols);
-    item_queue_  = new ArrayBlockingQueue(100, true); // fair
+    item_queue_  = new ArrayBlockingQueue(1000, true); // fair
   }
 
   @Override
@@ -84,20 +89,10 @@ extends Input
   protected final long getInternalHashCode()
   { return hashCode(); }
 
-  @Override
-  protected final String toStringWhich()
-  { return " ~> " + getSchemaOut(); }
-
   private class Generator
   extends Thread
   {
     private Exception ex_ = null;
-
-    public Generator()
-    {
-      super();
-      setName(toString());
-    }
 
     @Override
     public void run()
