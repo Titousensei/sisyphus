@@ -43,7 +43,10 @@ extends Input
 
   @Override
   public final void close()
-  { afterLoop(); }
+  {
+    gen_.interrupt();
+    afterLoop();
+  }
 
   @Override
   protected final int readRow(String[] result)
