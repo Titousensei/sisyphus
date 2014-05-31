@@ -3,6 +3,12 @@ Sisyphus
 
 A high-performance data processing framework in java.
 
+In a Nutshell
+-------------
+
+If you need to iterate through and modify, filter or agregate large amount
+of data, Sisyphus is the java library for you.
+
 Motivation
 ----------
 
