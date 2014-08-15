@@ -92,32 +92,33 @@ public class Pusher
       Input in = inputs[z];
       System.err.println("["+name_+"] Start --- " + in + " - " + new Date());
       if (in.open()) {
-        long t0 = System.currentTimeMillis();
-        List<String> schema_row = new ArrayList(in.getSchemaOut());
-        for (int i=0 ; i<num_actions ; i++) {
-          Action act = actions_.get(i);
-          List<String> out = act.getSchemaOut();
-          if (out!=null) {
-            for (String col : out) {
-              if (!schema_row.contains(col)) {
-                schema_row.add(col);
-              }
-              else {
-                System.err.println("["+name_+"] WARNING - Existing column ["+col+"] is modified by "+act);
-              }
-            }
-          }
-          if (debug_) { System.err.println("["+name_+"] ... DEBUG - ready Action "+i+": "+act); }
-          act.ready(schema_row);
-        }
-        in.ready(schema_row);
-        System.err.println("["+name_+"] ... row schema: "+schema_row);
-
         int line_count = 0;
         int debug_counter = debug_lines_;
         debug_ = (debug_lines_>0);
         int num_ex = 0;
+        long t0 = System.currentTimeMillis();
+
         try {
+          List<String> schema_row = new ArrayList(in.getSchemaOut());
+          for (int i=0 ; i<num_actions ; i++) {
+            Action act = actions_.get(i);
+            List<String> out = act.getSchemaOut();
+            if (out!=null) {
+              for (String col : out) {
+                if (!schema_row.contains(col)) {
+                  schema_row.add(col);
+                }
+                else {
+                  System.err.println("["+name_+"] WARNING - Existing column ["+col+"] is modified by "+act);
+                }
+              }
+            }
+            if (debug_) { System.err.println("["+name_+"] ... DEBUG - ready Action "+i+": "+act); }
+            act.ready(schema_row);
+          }
+          in.ready(schema_row);
+          System.err.println("["+name_+"] ... row schema: "+schema_row);
+
           while (limit_==0 || line_count<limit_) {
             String[] row;
             if (profiler_) {
