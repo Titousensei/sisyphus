@@ -6,6 +6,12 @@ import java.util.concurrent.*;
 import com.thefind.util.CollectionUtil;
 
 /**
+ * This is a base class to implement a custom Input using a generator
+ * pattern, similar to python's <i>yield</i> keyword.
+ *
+ * The implementation of the generator uses a background thread to generate
+ * the rows, and a blocking queue.
+ *
  * @author Eric Gaudet
  */
 public abstract class InputYielder
