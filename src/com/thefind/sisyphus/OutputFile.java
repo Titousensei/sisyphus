@@ -71,6 +71,9 @@ extends Output
     out_.print("\n");
   }
 
+  public File getFile()
+  { return file_; }
+
   public boolean isOpen()
   { return out_.isOpen(); }
 
