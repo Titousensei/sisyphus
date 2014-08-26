@@ -23,8 +23,8 @@ extends RowComparator
     String[] view2 = adapter2_.getView(row2);
 
     for (int i=0; i<view1.length; i++) {
-      Integer key1 = Double.parseDouble(view1[i]);
-      Integer key2 = Double.parseDouble(view2[i]);
+      Double key1 = Double.parseDouble(view1[i]);
+      Double key2 = Double.parseDouble(view2[i]);
 
       int result = key1.compareTo(key2);
       if (result != 0) {
