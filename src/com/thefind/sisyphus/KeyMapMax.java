@@ -10,9 +10,9 @@ extends OutputKeyMap
 {
   protected final boolean isMax_;
 
-  public KeyMapMax(KeyMap map, String col_max, boolean isMax)
+  public KeyMapMax(KeyMap map, boolean isMax)
   {
-    super(map, new String[] { map.getSchemaIn().get(0), col_max});
+    super(map);
     isMax_ = isMax;
   }
 
@@ -35,7 +35,7 @@ extends OutputKeyMap
   public String toStringWhich()
   {
     List<String> sch = map_.getSchemaIn();
-    return "["+sch.get(0)+", "+sch.get(1)+"=" + (isMax_?"Max(":"Min(") +schema_.get(1)+")]";
+    return (isMax_ ? "Max(" : "Min(") + schema_.get(1) + ')';
   }
 }
 
