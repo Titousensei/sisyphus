@@ -103,8 +103,8 @@ price of msrp-10%, I will create a Sisyphus program with the following
 actions (written in pseudo-code instead of the Java API of Sisyphus):
 
     for each row of file(dvd.tsv.gz):
-        if category=="comedy":
-            price = msrp * 0.9
+        if row[category]=="comedy":
+            row[price] = msrp * 0.9
         output row to file(dvd_new.tsv.gz)
 
 If, in addition, I want to update the number of times each DVD was rented by
@@ -119,10 +119,10 @@ as follows:
 
     # second push: do the same loop as before, with one more operation
     for each row of file(dvd.tsv.gz):
-        if category=="comedy":
+        if row[category]=="comedy":
             price = msrp * 0.9
-        if row(title) in rented:
-            row(num_rented) += rented.get(title)
+        if row[title] in rented:
+            row[num_rented] += rented[title]
         output row to file(dvd_new.tsv.gz)
 
 As you can see, the entire process only does one scan of each file. The memory
