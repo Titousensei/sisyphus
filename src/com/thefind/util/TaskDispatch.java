@@ -46,7 +46,7 @@ import java.util.concurrent.*;
  *
  * MyClass implements Task {
  *
- *   \\@Override
+ *   @Override
  *   public void process() {
  *     // do the real work here
  *   }

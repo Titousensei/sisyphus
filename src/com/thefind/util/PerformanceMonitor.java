@@ -19,7 +19,7 @@ import java.lang.management.ThreadMXBean;
  * Very lightweight, because it uses JMX beans, which are updated automatically
  * by the JVM.
  *
- * <code>
+ * <pre>
  * // Initialize the monitor
  * PerformanceMonitor mon = new PerformanceMonitor();
  * while (...) {
@@ -30,7 +30,7 @@ import java.lang.management.ThreadMXBean;
  * mon.measure(); // one last measure, optional
  * // print the results
  * System.err.println(mon.toString());
- * </code>
+ * </pre>
  *
  * @author Eric Gaudet
  */

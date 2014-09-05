@@ -13,7 +13,7 @@ extends Input
   protected final KeyMap map_;
   protected final String[] container_;
 
-  public Iterator<NativeHashLookup.Entry> iterator_ = null;
+  protected Iterator<NativeHashLookup.Entry> iterator_ = null;
 
   public InputKeyMap(KeyMap src)
   {

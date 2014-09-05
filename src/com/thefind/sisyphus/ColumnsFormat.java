@@ -2,8 +2,6 @@ package com.thefind.sisyphus;
 
 import java.util.*;
 
-import com.thefind.util.StringUtil;
-
 /**
  * @author Eric Gaudet
  */

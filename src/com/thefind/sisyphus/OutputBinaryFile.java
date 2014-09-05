@@ -12,6 +12,7 @@ import com.thefind.util.CollectionUtil;
  * Fields smaller or equal than 8 bytes (long) will assume decimal representation,
  * unless their specified size is negative.
  *
+ * <pre>
  * Example:
  *   size  |  representation          size  |  representation
  *     1   |  decimal                  -1   |  hexadecimal
@@ -25,6 +26,7 @@ import com.thefind.util.CollectionUtil;
  *     9   |  hexadecimal              -9   |  hexadecimal
  *    16   |  hexadecimal             -16   |  hexadecimal
  *  1000   |  hexadecimal           -1000   |  hexadecimal
+ * </pre>
  *
  * @author Eric Gaudet
  */

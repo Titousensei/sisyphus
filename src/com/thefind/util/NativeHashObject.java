@@ -1,7 +1,6 @@
 package com.thefind.util;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Iterator;
  *
  * Can be used in combination with an array or an ArrayList
  * as memory-efficient hashmaps of objects.
- *
+ * <pre>
  *   NativeHashObject lookup = new NativeHashObject();
  *   List<String> data = new ArrayList();
  *   // or String[] data = new String[len];
@@ -41,7 +40,7 @@ import java.util.Iterator;
  *     else
  *       return null;
  *   }
- *
+ * </pre>
  *   For very large string arrays, append the strings to a file
  *   and lookup the seek positions.
  *

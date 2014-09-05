@@ -20,11 +20,11 @@ implements Serializable //, Collection<Long>
   /**
    * Constructs an empty NativeHashSet with a variable index size.
    * This NativeHashSet uses default parameters for good average performance.
-   *
+   * <pre>
    * For a 1280M JVM       max   write   3*read  write50%  3*read50%  write1M  3*read1M
    * HashMap:              12M   610u/s  8978u/s   530u/s   8955u/s    553u/s   9346u/s
    * NativeHashSet():     150M  1336u/s  4202u/s  2556u/s   6221u/s   2645u/s  14563u/s
-   *
+   *</pre>
    * Note: a 1280M JVM can create up to byte[1230000000] = 1173MB
    * actual max is 152M long = 1160MB (8.1 byte/long),
    * hashmap        12M long = 92MB (102.5 byte/long)
@@ -39,13 +39,13 @@ implements Serializable //, Collection<Long>
    *
    * The performance will quickly degrade if the size becomes larger
    * than twice the initialCapacity.
-   *
+   *<pre>
    * For a 1280M JVM       max   write   3*read  write50%  3*read50%  write1M  3*read1M
    * NativeHashSet(100M): 150M  1404u/s  4321u/s  2823u/s   6308u/s   1938u/s  30612u/s
    * NativeHashSet(70M):  150M  1388u/s  4130u/s  2912u/s   6394u/s   1980u/s  30303u/s
    * NativeHashSet(30M):  150M   616u/s  2348u/s  1480u/s   2987u/s   1789u/s  16667u/s
    * NativeHashSet(10M):  150M   419u/s  1531u/s   870u/s   2049u/s   2941u/s  15075u/s
-   *
+   *</pre>
    * @param  initialCapacity the initial capacity
    * @throws IllegalArgumentException if the initial capacity is negative
    *     or the load factor is nonpositive

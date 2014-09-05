@@ -13,7 +13,7 @@ extends Input
   protected final KeyDouble double_;
   protected final String[] container_;
 
-  public Iterator<NativeHashDouble.Entry> iterator_ = null;
+  protected Iterator<NativeHashDouble.Entry> iterator_ = null;
 
   public InputKeyDouble(KeyDouble src)
   {

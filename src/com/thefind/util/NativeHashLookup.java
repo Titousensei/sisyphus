@@ -1,9 +1,5 @@
 package com.thefind.util;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -15,7 +11,7 @@ import java.util.Iterator;
  *
  * Can be used in combination with an array or an ArrayList
  * as memory-efficient hashmaps of objects.
- *
+ * <pre>
  *   NativeHashLookup lookup = new NativeHashLookup();
  *   List<String> data = new ArrayList();
  *   // or String[] data = new String[len];
@@ -44,7 +40,7 @@ import java.util.Iterator;
  *     else
  *       return null;
  *   }
- *
+ * </pre>
  *   For very large string arrays, append the strings to a file
  *   and lookup the seek positions.
  *

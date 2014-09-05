@@ -13,7 +13,7 @@ extends Input
   protected final KeyBinding bind_;
   protected final String[] container_;
 
-  public Iterator<NativeHashBinding.Entry> iterator_ = null;
+  protected Iterator<NativeHashBinding.Entry> iterator_ = null;
 
   public InputKeyBinding(KeyBinding src)
   {
