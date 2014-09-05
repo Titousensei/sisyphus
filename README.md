@@ -115,7 +115,7 @@ as follows:
     # first push: read rented.txt into a hashtable
     rented = new hashtable
     for each row of file(rented.txt):
-        increment row(title) in rented
+        increment row[title] in rented
 
     # second push: do the same loop as before, with one more operation
     for each row of file(dvd.tsv.gz):
