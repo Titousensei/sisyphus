@@ -154,7 +154,7 @@ extends Input
   }
 
   @Override
-  protected long getInternalHashCode()
+  public long getInternalHashCode()
   { return filename_.hashCode(); }
 
   @Override

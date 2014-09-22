@@ -77,7 +77,7 @@ extends Input
   }
 
   @Override
-  protected final long getInternalHashCode()
+  public final long getInternalHashCode()
   { return input_.toString().hashCode(); }
 
   @Override

@@ -97,7 +97,7 @@ public abstract class Input
 
   protected abstract String toStringWhich();
 
-  protected abstract long getInternalHashCode();
+  public abstract long getInternalHashCode();
 
   public boolean sameAs(Action act)
   { return act.sameAs(getInternalHashCode()); }

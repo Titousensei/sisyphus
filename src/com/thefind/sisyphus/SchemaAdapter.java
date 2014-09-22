@@ -7,8 +7,8 @@ import com.thefind.util.CollectionUtil;
 /**
  * Container class to create views of an incoming row.
  *
- * - Constructor declares the schema of the view you want to obtain.
- * - setSchemaIn declares the schema of the incoming row.
+ * - Constructor declares the schema (out) of the view you want to obtain.
+ * - setSchemaIn declares the schema (in) of the incoming row.
  *
  * Use getView(row) to receive the view with the desired schema from the incoming row.
  * Use applyView(row) to modify the row with the current view.

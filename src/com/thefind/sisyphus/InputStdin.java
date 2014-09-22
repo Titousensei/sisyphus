@@ -50,7 +50,7 @@ extends Input
   }
 
   @Override
-  protected long getInternalHashCode()
+  public long getInternalHashCode()
   { return System.in.hashCode(); }
 
   @Override

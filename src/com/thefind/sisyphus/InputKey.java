@@ -58,7 +58,7 @@ extends Input
   }
 
   @Override
-  protected long getInternalHashCode()
+  public long getInternalHashCode()
   { return key_.hashCode(); }
 
   @Override

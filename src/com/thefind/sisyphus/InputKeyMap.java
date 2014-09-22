@@ -56,7 +56,7 @@ extends Input
   }
 
   @Override
-  protected long getInternalHashCode()
+  public long getInternalHashCode()
   { return map_.hashCode(); }
 
   @Override

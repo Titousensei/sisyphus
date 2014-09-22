@@ -95,7 +95,7 @@ extends Input
   }
 
   @Override
-  protected long getInternalHashCode()
+  public long getInternalHashCode()
   { return group_.str_.hashCode(); }
 
   @Override

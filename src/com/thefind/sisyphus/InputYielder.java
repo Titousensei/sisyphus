@@ -95,7 +95,7 @@ extends Input
   }
 
   @Override
-  protected final long getInternalHashCode()
+  public final long getInternalHashCode()
   { return hashCode(); }
 
   private class Generator

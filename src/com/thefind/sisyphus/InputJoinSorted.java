@@ -230,7 +230,7 @@ extends Input
   }
 
   @Override
-  protected long getInternalHashCode()
+  public long getInternalHashCode()
   { return str_.hashCode(); }
 
   @Override
