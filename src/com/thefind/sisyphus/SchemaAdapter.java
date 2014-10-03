@@ -21,121 +21,70 @@ class SchemaAdapter
   protected List<String> schema_in_;
   protected final List<String> schema_out_;
 
-  protected final String[] container_;
   protected final int[] adapter_;
   protected final int size_;
 
-  public SchemaAdapter(String[] schema_out)
-  { this(CollectionUtil.asConstList(schema_out)); }
+  public SchemaAdapter(String[] schema_in, String[] schema_out)
+  { this(CollectionUtil.asConstList(schema_in), CollectionUtil.asConstList(schema_out)); }
 
   /**
-   * Declare the schema of the view you want to obtain.
    */
-  public SchemaAdapter(List<String> schema_out)
+  public SchemaAdapter(List<String> schema_in, List<String> schema_out)
   {
+    schema_in_  = schema_in;
     schema_out_ = schema_out;
+    adapter_   = new int[schema_out_.size()];
 
-    size_      = schema_out_.size();
-    container_ = new String[size_];
-    adapter_   = new int[size_];
+    int sz = 0;
+    for (int j = 0 ; j< schema_out_.size() ; j++) {
+      String s = schema_out_.get(j);
+      adapter_[j] = schema_in_.indexOf(s);
+      if (adapter_[j] >= 0) {
+        ++ sz;
+      }
+    }
+
+    size_ = sz;
+  }
+
+  public void assertMapAllInput()
+  {
+    if (size_ != schema_in_.size()) {
+      List<String> missing = new ArrayList(schema_in);
+      missing.removeAll(schema_out);
+      throw new SchemaException("Input "+schema_in_+" doesn't contain columns "+missing+"\" for output "+schema_out_);
+    }
+  }
+
+  public void assertMapAllOutput()
+  {
+    if (size_ != schema_in_.size()) {
+      List<String> missing = new ArrayList(schema_out);
+      missing.removeAll(schema_in);
+      throw new SchemaException("Output "+schema_out_+" doesn't contain columns "+missing+"\" from input "+schema_in_);
+    }
   }
 
   public int getSize() { return size_; }
+
+  public List<String> getSchemaIn()
+  { return schema_in_; }
 
   public List<String> getSchemaOut()
   { return schema_out_; }
 
   /**
-   * Declare the schema of the incoming row.
+   * Receive the view with the desired schema from the incoming row.
    */
-  public void setSchemaIn(List<String> schema_in)
+  public void apply(String[] input, String[] output)
   {
-    schema_in_ = schema_in;
-
-    for (int i = 0 ; i < size_ ; i++) {
-      adapter_[i] = -1;
-    }
-
-    int k = 0;
-    for (String s : schema_out_) {
-      int j = schema_in_.indexOf(s);
-      if (j>=0) {
-        adapter_[k++] = j;
-      }
-      else {
-        throw new SchemaException("Input "+schema_in_+" doesn't contain column \""+s+"\" for output "+schema_out_);
+    for (int j = 0 ; j < output.length ; j++) {
+      int i = adapter_[j];
+      if (i>=0) {
+        output[j] = input[i];
       }
     }
   }
-
-  /**
-   * Receive the view with the desired schema from the incoming row.
-   */
-  public String[] getView(String[] input)
-  {
-    for (int i = 0 ; i < size_ ; i++) {
-      container_[i] = input[adapter_[i]];
-    }
-    return container_;
-  }
-
-  /**
-   * Receive the view with the desired schema from the incoming row.
-   */
-  public void getView(String[] external, String[] input)
-  {
-    for (int i = 0 ; i < size_ ; i++) {
-      external[i] = input[adapter_[i]];
-    }
-  }
-
-  /**
-   * Modify the row by copying the current view to it.
-   */
-  public void applyView(String[] result)
-  {
-    for (int i = 0 ; i < size_ ; i++) {
-      result[adapter_[i]] = container_[i];
-    }
-  }
-
-  /**
-   * Modify the row by copying the current view to it.
-   */
-  public void clearView(String[] result)
-  {
-    for (int i = 0 ; i < size_ ; i++) {
-      result[adapter_[i]] = null;
-    }
-  }
-
-  /**
-   * Modify the row with an external view, using the declared schemas.
-   */
-  public void applyView(String[] container, String[] result)
-  {
-    for (int i = 0 ; i < size_ ; i++) {
-      result[adapter_[i]] = container[i];
-    }
-  }
-
-  /**
-   * Get the current view.
-   */
-  public String[] getContainer()
-  { return container_; }
-
-  /**
-   * Clears the current view.
-   */
-  public void clearContainer()
-  { Arrays.fill(container_, null); }
-
-  /**
-   * Get the current view.
-   */
-  public String[] newContainer()
-  { return new String[size_]; }
 
   @Override
   public String toString()
