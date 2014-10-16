@@ -38,11 +38,6 @@ public class PerformanceMonitor
 {
   protected final static Map<String, Boolean> IS_GC_BLOCKING = new HashMap();
 
-  static {
-    IS_GC_BLOCKING.put("PS Scavenge", Boolean.FALSE);
-    IS_GC_BLOCKING.put("PS MarkSweep", Boolean.TRUE);
-  };
-
   protected final static long MB_SHIFT = 20L;
   protected final static long NANO_TO_MILLI = 1000L*1000L;
 
@@ -59,12 +54,16 @@ public class PerformanceMonitor
 
   protected final List<GarbageCollectorMXBean> gcbeans_;
   protected final int num_gc_;
+  protected final long[] gc_last_;
   protected final long[] gc_time_;
   protected final long[] gc_cnt_;
+  protected long gc_instant_;
 
   protected final long time_start_;
+  protected long time_prev_;
   protected long time_last_;
   protected final long cpu_start_;
+  protected long cpu_prev_;
   protected long cpu_last_;
   protected final int num_cpu_;
 
@@ -81,6 +80,11 @@ public class PerformanceMonitor
 
   protected final OperatingSystemMXBean osbean_;
   protected final ThreadMXBean thbean_;
+
+  static {
+    IS_GC_BLOCKING.put("PS Scavenge", Boolean.FALSE);
+    IS_GC_BLOCKING.put("PS MarkSweep", Boolean.TRUE);
+  };
 
   public PerformanceMonitor()
   {
@@ -117,11 +121,13 @@ public class PerformanceMonitor
     gcbeans_ = ManagementFactory.getGarbageCollectorMXBeans();
     num_gc_ = gcbeans_.size();
     gc_time_ = new long[num_gc_];
+    gc_last_ = new long[num_gc_];
     gc_cnt_  = new long[num_gc_];
     for (int i=0 ; i<num_gc_ ; i++) {
       GarbageCollectorMXBean gc = gcbeans_.get(i);
-      gc_time_[i] = gc.getCollectionTime();
       gc_cnt_[i]  = gc.getCollectionCount();
+      gc_time_[i] = gc.getCollectionTime();
+      gc_last_[i] = gc_time_[i];
     }
 
     osbean_ = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
@@ -140,6 +146,10 @@ public class PerformanceMonitor
 
     time_start_ = System.currentTimeMillis();
     time_last_  = time_start_;
+
+    time_prev_ = time_last_;
+    cpu_prev_  = cpu_last_;
+    gc_instant_ = 0L;
   }
 
   /**
@@ -153,6 +163,17 @@ public class PerformanceMonitor
       try {
         long now = System.currentTimeMillis();
         if ((now - time_last_) > (1000L*10)) { // 10 seconds
+          long total_gc = 0L;
+          for (int i=0 ; i<num_gc_ ; i++) {
+            long gc_time = getGcTime(i);
+            total_gc += gc_time - gc_last_[i];
+            gc_last_[i] = gc_time;
+          }
+          gc_instant_ = total_gc;
+
+          time_prev_ = time_last_;
+          cpu_prev_  = cpu_last_;
+
           time_last_ = now;
           cpu_last_  = osbean_.getProcessCpuTime();
           load_last_  = osbean_.getSystemLoadAverage();
@@ -175,6 +196,7 @@ public class PerformanceMonitor
             heap_committed_sum_ += mu.getCommitted()>>>MB_SHIFT;
             heap_used_sum_ += mu.getUsed()>>>MB_SHIFT;
           }
+
           return true;
         }
       }
@@ -254,6 +276,9 @@ public class PerformanceMonitor
   public String getGcName(int i)
   { return gcbeans_.get(i).getName(); }
 
+  public double getGcNow()
+  { return 1.0*gc_instant_/(time_last_ - time_prev_); }
+
   public long getGcTime()
   {
     long ret = 0L;
@@ -268,6 +293,9 @@ public class PerformanceMonitor
 
   public double getCpuUsage()
   { return 1.0*(cpu_last_ - cpu_start_)/NANO_TO_MILLI/getRunningTime()/num_cpu_; }
+
+  public double getCpuNow()
+  { return 1.0*(cpu_last_ - cpu_prev_)/NANO_TO_MILLI/(time_last_ - time_prev_)/num_cpu_; }
 
   public long getRunningTime()
   { return time_last_ - time_start_; }
@@ -309,6 +337,10 @@ public class PerformanceMonitor
         .append(String.format(": %1.2f%%; ", 100.0*getCpuUsage()))
         .append(String.format("%,d", heap_cnt_))
         .append(" measures")
+        .append("; Instant-CPU ")
+        .append(String.format(": %1.2f%%; ", 100.0*getCpuNow()))
+        .append("; Instant-GC ")
+        .append(String.format(": %1.2f%%; ", 100.0*getGcNow()))
         .append("; Running time: ")
         .append(StringUtil.readableTime(runtime));
 
