@@ -7,9 +7,16 @@ package com.thefind.util;
  */
 public class MurmurHash3
 {
+  public final static int HASH_SEED = 0x1234ABCD;
+  public final static String  DEFAULT_CHARSET_STR = "UTF-8";
+  public final static Charset DEFAULT_CHARSET = Charset.forName(DEFAULT_CHARSET_STR);
+
   private final int seed_;
 
   private int value_;
+
+  public MurmurHash3()
+  { this(HASH_SEED); }
 
   public MurmurHash3(int seed)
   {
@@ -17,9 +24,22 @@ public class MurmurHash3
     reset();
   }
 
+  public static int hash(String str)
+  {
+    int hash = HASH_SEED;
+    byte[] b = str.getBytes(DEFAULT_CHARSET);
+    return MurmurHash3.calc(b, 0, b.length, hash);
+  }
+
   public final void reset()
   {
     value_ = seed_;
+  }
+
+  public void update(String str)
+  {
+    byte[] b = str.getBytes(DEFAULT_CHARSET);
+    value_ = MurmurHash3.calc(b, 0, b.length, value_);
   }
 
   public void update(byte[] b)
