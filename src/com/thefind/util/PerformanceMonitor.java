@@ -40,6 +40,7 @@ public class PerformanceMonitor
 
   protected final static long MB_SHIFT = 20L;
   protected final static long NANO_TO_MILLI = 1000L*1000L;
+  protected final static long DECAY_TIME = 1000L * 60 * 5; // 5 minutes
 
   protected final List<MemoryPoolMXBean> hbean_;
   protected final int num_mem_;
@@ -57,7 +58,9 @@ public class PerformanceMonitor
   protected final long[] gc_last_;
   protected final long[] gc_time_;
   protected final long[] gc_cnt_;
-  protected long gc_instant_;
+
+  protected double instant_gc_;
+  protected double instant_cpu_;
 
   protected final long time_start_;
   protected long time_prev_;
@@ -149,7 +152,9 @@ public class PerformanceMonitor
 
     time_prev_ = time_last_;
     cpu_prev_  = cpu_last_;
-    gc_instant_ = 0L;
+
+    instant_gc_  = 0.0;
+    instant_cpu_ = 0.0;
   }
 
   /**
@@ -163,21 +168,35 @@ public class PerformanceMonitor
       try {
         long now = System.currentTimeMillis();
         if ((now - time_last_) > (1000L*10)) { // 10 seconds
+          time_prev_ = time_last_;
+          time_last_ = now;
+          long dt = time_last_ - time_prev_;
+          long dt_prev = DECAY_TIME - dt;
+          long dt_now = dt;
+          if (dt_prev<0L) {
+            dt_prev = 0;
+            dt_now = DECAY_TIME;
+          }
+
           long total_gc = 0L;
           for (int i=0 ; i<num_gc_ ; i++) {
             long gc_time = getGcTime(i);
             total_gc += gc_time - gc_last_[i];
             gc_last_[i] = gc_time;
           }
-          gc_instant_ = total_gc;
+          // gc decay
+          double dgc = 1.0 * total_gc / dt;
+          instant_gc_ = (dgc * dt_now + instant_gc_ * dt_prev) / DECAY_TIME;
 
-          time_prev_ = time_last_;
           cpu_prev_  = cpu_last_;
 
-          time_last_ = now;
           cpu_last_  = osbean_.getProcessCpuTime();
           load_last_  = osbean_.getSystemLoadAverage();
           swap_last_  = osbean_.getFreeSwapSpaceSize();
+
+          // cpu decay
+          double dcpu = 1.0*(cpu_last_ - cpu_prev_) / NANO_TO_MILLI / dt / num_cpu_;
+          instant_cpu_ = (dcpu * dt_now + instant_cpu_ * dt_prev) / DECAY_TIME;
 
           th_daemon_ = thbean_.getDaemonThreadCount();
           th_peak_   = thbean_.getPeakThreadCount();
@@ -277,7 +296,7 @@ public class PerformanceMonitor
   { return gcbeans_.get(i).getName(); }
 
   public double getGcNow()
-  { return 1.0*gc_instant_/(time_last_ - time_prev_); }
+  { return instant_gc_; }
 
   public long getGcTime()
   {
@@ -295,7 +314,7 @@ public class PerformanceMonitor
   { return 1.0*(cpu_last_ - cpu_start_)/NANO_TO_MILLI/getRunningTime()/num_cpu_; }
 
   public double getCpuNow()
-  { return 1.0*(cpu_last_ - cpu_prev_)/NANO_TO_MILLI/(time_last_ - time_prev_)/num_cpu_; }
+  { return instant_cpu_; }
 
   public long getRunningTime()
   { return time_last_ - time_start_; }
@@ -337,10 +356,8 @@ public class PerformanceMonitor
         .append(String.format(": %1.2f%%; ", 100.0*getCpuUsage()))
         .append(String.format("%,d", heap_cnt_))
         .append(" measures")
-        .append("; Instant-CPU ")
-        .append(String.format(": %1.2f%%; ", 100.0*getCpuNow()))
-        .append("; Instant-GC ")
-        .append(String.format(": %1.2f%%; ", 100.0*getGcNow()))
+        .append(String.format("; Instant-CPU: %1.2f%%", 100.0*getCpuNow()))
+        .append(String.format("; Instant-GC: %1.2f%%", 100.0*getGcNow()))
         .append("; Running time: ")
         .append(StringUtil.readableTime(runtime));
 
