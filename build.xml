@@ -5,7 +5,7 @@
 
   <!-- set global properties for this build -->
   <property name="component.name" value="Sisyphus"/>
-  <property name="component.version" value="0.3.2"/>
+  <property name="component.version" value="0.3.3"/>
 
   <property name="src"     location="src"/>
   <property name="build"   location="build"/>
