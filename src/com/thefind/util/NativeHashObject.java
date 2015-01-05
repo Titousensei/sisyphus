@@ -437,7 +437,7 @@ implements Serializable //, Collection<T>
   }
 
   public final class NativeHashObjectIterator
-  implements Iterator<Entry>
+  implements Iterator<Entry<T>>
   {
     private int currBucketNum_ = 0;
     private int currCellNum_ = 0;
@@ -486,11 +486,11 @@ implements Serializable //, Collection<T>
     }
 
     @Override
-    public Entry next()
+    public Entry<T> next()
     {
       //special code for handling zero
       if (handlingZero_) {
-        Entry p = new Entry(0L, value_zero_);
+        Entry<T> p = new Entry(0L, value_zero_);
         currentCount_++;
         return p;
       }
@@ -502,7 +502,7 @@ implements Serializable //, Collection<T>
 
       //read the actual key-value entry
       int numKeys = table_[currBucketNum_].length;
-      Entry p = new Entry(table_[currBucketNum_][currCellNum_], value_[currBucketNum_][currCellNum_]);
+      Entry<T> p = new Entry(table_[currBucketNum_][currCellNum_], value_[currBucketNum_][currCellNum_]);
       currCellNum_++;
 
       //check if we have reached the end of this block
