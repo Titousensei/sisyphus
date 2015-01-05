@@ -91,10 +91,10 @@ extends Output
     if (curfile.exists()) {
       if (flags_.contains(Flag.REPLACE)) {
         if (curfile.delete()) {
-          if (verbose_) { System.err.println("[OutputSplit] Flag.REPLACE: deleted file "+curfile.getAbsolutePath()); }
+          if (verbose_) { System.err.println("[OutputFile] Flag.REPLACE: deleted file "+curfile.getAbsolutePath()); }
         }
         else {
-          System.err.println("[OutputSplit] WARNING - Flag.REPLACE: Failed to delete file "+curfile.getAbsolutePath());
+          System.err.println("[OutputFile] WARNING - Flag.REPLACE: Failed to delete file "+curfile.getAbsolutePath());
         }
       }
       else if (!flags_.contains(Flag.UNCOMPRESSED)) {
@@ -260,16 +260,16 @@ extends Output
         File bakfile = new File(filename + BACKUP_SUFFIX);
         if (bakfile.exists()) {
           if (bakfile.delete()) {
-            System.err.println("[OutputSplit] INFO - Deleted backup file: "+bakfile.getAbsolutePath());
+            System.err.println("[OutputFile] INFO - Deleted backup file: "+bakfile.getAbsolutePath());
           }
           else {
-            System.err.println("[OutputSplit] WARNING - Failed to delete backup file: "+bakfile.getAbsolutePath());
+            System.err.println("[OutputFile] WARNING - Failed to delete backup file: "+bakfile.getAbsolutePath());
           }
         }
         if (file.exists()) {
           file.renameTo(bakfile);
           if (!file.renameTo(bakfile)) {
-            System.err.println("[OutputSplit] WARNING - Failed to rename to backup file: "+file.getAbsolutePath());
+            System.err.println("[OutputFile] WARNING - Failed to rename to backup file: "+file.getAbsolutePath());
           }
         }
       }
