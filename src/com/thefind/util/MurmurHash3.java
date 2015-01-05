@@ -1,5 +1,7 @@
 package com.thefind.util;
 
+import java.nio.charset.Charset;
+
 /**
  * Fastest high-quality (non-cryptographic) 32-bits hash function
  *
