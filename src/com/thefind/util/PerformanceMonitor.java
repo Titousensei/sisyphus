@@ -66,7 +66,6 @@ public class PerformanceMonitor
   protected long time_prev_;
   protected long time_last_;
   protected final long cpu_start_;
-  protected long cpu_prev_;
   protected long cpu_last_;
   protected final int num_cpu_;
 
@@ -151,7 +150,6 @@ public class PerformanceMonitor
     time_last_  = time_start_;
 
     time_prev_ = time_last_;
-    cpu_prev_  = cpu_last_;
 
     instant_gc_  = 0.0;
     instant_cpu_ = 0.0;
@@ -171,12 +169,6 @@ public class PerformanceMonitor
           time_prev_ = time_last_;
           time_last_ = now;
           long dt = time_last_ - time_prev_;
-          long dt_prev = DECAY_TIME - dt;
-          long dt_now = dt;
-          if (dt_prev<0L) {
-            dt_prev = 0;
-            dt_now = DECAY_TIME;
-          }
 
           long total_gc = 0L;
           for (int i=0 ; i<num_gc_ ; i++) {
@@ -185,18 +177,15 @@ public class PerformanceMonitor
             gc_last_[i] = gc_time;
           }
           // gc decay
-          double dgc = 1.0 * total_gc / dt;
-          instant_gc_ = (dgc * dt_now + instant_gc_ * dt_prev) / DECAY_TIME;
-
-          cpu_prev_  = cpu_last_;
+          instant_gc_ = (total_gc - instant_gc_) * dt / DECAY_TIME;
 
           cpu_last_  = osbean_.getProcessCpuTime();
-          load_last_  = osbean_.getSystemLoadAverage();
-          swap_last_  = osbean_.getFreeSwapSpaceSize();
+          load_last_ = osbean_.getSystemLoadAverage();
+          swap_last_ = osbean_.getFreeSwapSpaceSize();
 
           // cpu decay
-          double dcpu = 1.0*(cpu_last_ - cpu_prev_) / NANO_TO_MILLI / dt / num_cpu_;
-          instant_cpu_ = (dcpu * dt_now + instant_cpu_ * dt_prev) / DECAY_TIME;
+          double dcpu = 1.0 * cpu_last_ / NANO_TO_MILLI / num_cpu_;
+          instant_cpu_ = (dcpu - instant_cpu_) * dt / DECAY_TIME;
 
           th_daemon_ = thbean_.getDaemonThreadCount();
           th_peak_   = thbean_.getPeakThreadCount();
