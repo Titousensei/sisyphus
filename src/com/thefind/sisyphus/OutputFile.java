@@ -104,7 +104,7 @@ extends Output
 
     if (openIO()) {
       if(!flags_.contains(Flag.NO_META)) {
-       saveMetaData();
+        MetaUtil.saveMetaData(filename_, getSchemaIn());
       }
       return true;
     }
@@ -136,76 +136,6 @@ extends Output
 
   public String getSuffix()
   { return suffix_; }
-
-  /*UTILITY EXPORT METHODS*/
-
-  public static String getMetaPath(String filename)
-  {
-    int cut = filename.lastIndexOf('/');
-    if (cut==-1) {
-      cut = filename.lastIndexOf(File.separatorChar);
-    }
-    if (cut==-1) {
-      return FILE_META_PREFIX + filename;
-    }
-    cut++;
-    return filename.substring(0, cut) + FILE_META_PREFIX + filename.substring(cut);
-  }
-
-  protected void saveMetaData()
-  {
-    String metafile = OutputFile.getMetaPath(filename_);
-    try {
-      PrintStream meta = new PrintStream(metafile, FileWriter.DEFAULT_CHARSET_STR);
-      meta.print(META_SCHEMA);
-      for (String col : getSchemaIn()) {
-        meta.print('\t');
-        meta.print(col);
-      }
-      meta.println();
-      meta.close();
-    }
-    catch (UnsupportedEncodingException uuex) {
-      System.err.println("[OutputFile.saveMeta] WARNING - Could not save metadata as utf-8: "+uuex.getMessage());
-    }
-    catch (FileNotFoundException fnfex) {
-      System.err.println("[OutputFile.saveMeta] WARNING - Could not save metadata into: "+metafile);
-    }
-  }
-
-  public static void saveAsText(Key key, String filename)
-  { saveAsText(key, filename, EnumSet.noneOf(Flag.class)); }
-
-  public static void saveAsText(Key key, String filename, EnumSet<Flag> flags)
-  {
-    Input in = new InputKey(key);
-    saveAsText( in, filename, flags);
-  }
-
-  public static void saveAsText(KeyMap key, String filename)
-  { saveAsText(key, filename, EnumSet.noneOf(Flag.class)); }
-
-  public static void saveAsText(KeyMap key, String filename, EnumSet<Flag> flags)
-  {
-    Input in = new InputKeyMap(key);
-    saveAsText( in, filename, flags);
-  }
-
-  private static void saveAsText(Input in, String filename, EnumSet<Flag> flags)
-  {
-    OutputFile out = new OutputFile(filename, flags, in.getSchemaOut().toArray(new String[0]));
-    if(!flags.contains(Flag.NO_META)) {
-      out.saveMetaData();
-    }
-    out.open();
-    in.open();
-    String[] in_row = new String[in.getSchemaOut().size()];
-    while (in.readRow(in_row)>-1) {
-      out.append(in_row);
-    }
-    in.close();
-    out.close();
-  }
 
   /*FILE CREATION AND FLAGS HANDLING*/
 

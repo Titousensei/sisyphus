@@ -137,9 +137,9 @@ extends OutputFile
 
   private static void saveAsBinary(Input in, String filename, EnumSet<Flag> flags, int[] sz)
   {
-    OutputFile out = new OutputBinaryFile(filename, flags, sz, in.getSchemaOut().toArray(new String[0]));
+    OutputFile out = new OutputBinaryFile(filename, flags, sz, in.getSchemaOut());
     if (!flags.contains(Flag.NO_META)) {
-      out.saveMetaData();
+      MetaUtil.saveMetaData(filename, in.getSchemaOut());
     }
     out.open();
     in.open();
