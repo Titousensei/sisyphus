@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export CLASSPATH="./build::./include/bsh-2.0b6.jar:./include/opencsv-2.3.jar"
+
+java bsh.Interpreter
