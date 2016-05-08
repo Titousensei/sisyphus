@@ -15,7 +15,7 @@ import com.thefind.util.StringUtil;
 public class Pusher
 {
   protected final static String DEFAULT_NAME = "Pusher";
-  protected final static String VERSION = "0.3.3";
+  protected final static String VERSION = "0.4.0";
 
   protected final List<Action> actions_ = new ArrayList();
 
@@ -257,6 +257,51 @@ public class Pusher
       td.join();
       td = null;
     }
+  }
+
+  @Override
+  public String toString()
+  {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("Pusher[")
+      .append(name_)
+      .append("]{v")
+      .append(VERSION);
+    if (limit_>0) {
+      sb.append("; limit:")
+        .append(limit_);
+    }
+    if (sampling_) {
+      sb.append("; sample:")
+        .append(sample_);
+    }
+    if (skip_too_long_) {
+      sb.append("; skip_too_long");
+    }
+    if (skip_too_long_) {
+      sb.append("; skip_too_short");
+    }
+    if (profiler_) {
+      sb.append("; profiler");
+    }
+    if (parallel_>1) {
+      sb.append("; parallel:")
+        .append(parallel_);
+    }
+    if (debug_) {
+      sb.append("; debug:")
+        .append(debug_lines_);
+    }
+    sb.append("\n  Actions:\n");
+    for (Action act : actions_) {
+      sb.append("  ")
+        .append(act)
+        .append('\n');
+    }
+    sb.append('}');
+
+    return sb.toString();
   }
 
   /* BUILDING METHODS */
