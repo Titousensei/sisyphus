@@ -264,9 +264,8 @@ public class Pusher
   {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("Pusher[")
-      .append(name_)
-      .append("]{v")
+    sb.append(name_)
+      .append("{v")
       .append(VERSION);
     if (limit_>0) {
       sb.append("; limit:")
@@ -290,10 +289,18 @@ public class Pusher
         .append(parallel_);
     }
     if (debug_) {
-      sb.append("; debug:")
-        .append(debug_lines_);
+      if (debug_lines_ == Integer.MAX_VALUE) {
+        sb.append("; debug:all");
+      }
+      else if (num_lines>0) {
+        sb.append("; debug:")
+          .append(debug_lines_);
+      }
+      else if (num_lines==-1) {
+        sb.append("; debug:sample");
+      }
     }
-    sb.append("\n  Actions:\n");
+    sb.append('\n');
     for (Action act : actions_) {
       sb.append("  ")
         .append(act)
@@ -345,6 +352,7 @@ public class Pusher
     }
     else {
       System.err.println("["+name_+"] DEBUG enabled, will not print rows");
+      debug_ = false;
     }
     debug_lines_ = num_lines;
 
